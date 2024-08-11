@@ -33,6 +33,9 @@ __revision__ = '$Format:%H$'
 from qgis.core import QgsProcessingProvider
 from .merqantile_algorithm import MerqantileAlgorithm
 
+import os
+import inspect
+from qgis.PyQt.QtGui import QIcon
 
 class MerqantileProvider(QgsProcessingProvider):
 
@@ -79,7 +82,9 @@ class MerqantileProvider(QgsProcessingProvider):
         Should return a QIcon which is used for your provider inside
         the Processing toolbox.
         """
-        return QgsProcessingProvider.icon(self)
+        cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'logo.png')))
+        return icon
 
     def longName(self):
         """

@@ -44,6 +44,10 @@ from qgis.core import (QgsProcessing,
                        QgsProject)
 
 
+import os
+import inspect
+from qgis.PyQt.QtGui import QIcon
+
 class MerqantileAlgorithm(QgsProcessingAlgorithm):
     """
     This is an example algorithm that takes a vector layer and
@@ -163,6 +167,11 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
 
     def tr(self, string):
         return QCoreApplication.translate('Processing', string)
+    
+    def icon(self):
+        cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'logo.png')))
+        return icon
 
     def createInstance(self):
         return MerqantileAlgorithm()
