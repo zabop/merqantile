@@ -94,11 +94,24 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         Here is where the processing itself takes place.
         """
 
-        vl = QgsVectorLayer("Polygon", "temp", "memory")
+        vl = QgsVectorLayer("Polygon?crs=EPSG:3857", "temp", "memory")
         pr = vl.dataProvider()
         f = QgsFeature()
 
-        points = [QgsPointXY(43,21), QgsPointXY(43,22), QgsPointXY(44,22), QgsPointXY(43,21)]
+        maxc = 20037508.342789244
+
+        def sidelength(z):
+            return 2 * maxc / (2 ** z)
+        
+        def tile_centre(z, x, y):
+            x = -maxc + maxc / (2 ** z) + sidelength(z) * x
+            y = maxc - maxc / (2 ** z) - sidelength(z) * y
+            return x, y
+        
+        tc = tile_centre(parameters["Z"], parameters["X"], parameters["Y"])
+        sl = sidelength(parameters["Z"])
+
+        points = [QgsPointXY(tc[0],tc[1]), QgsPointXY(tc[0]+sl,tc[1]), QgsPointXY(tc[0]+sl,tc[1]+sl), QgsPointXY(tc[0],tc[1])]
         polygon = [points]
 
         f.setGeometry(QgsGeometry.fromPolygonXY(polygon))
