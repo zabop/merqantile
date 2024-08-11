@@ -63,7 +63,7 @@ class MerqantileProvider(QgsProcessingProvider):
         string should be a unique, short, character only string, eg "qgis" or
         "gdal". This string should not be localised.
         """
-        return 'Tilebounds'
+        return 'merqantile'
 
     def name(self):
         """
@@ -72,7 +72,7 @@ class MerqantileProvider(QgsProcessingProvider):
 
         This string should be short (e.g. "Lastools") and localised.
         """
-        return self.tr('Tilebounds')
+        return self.tr('merqantile')
 
     def icon(self):
         """
