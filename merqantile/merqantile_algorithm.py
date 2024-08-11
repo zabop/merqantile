@@ -98,15 +98,10 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         pr = vl.dataProvider()
         f = QgsFeature()
 
-        # Create a list of points
-        points = [QgsPointXY(43,21), QgsPointXY(43,22), QgsPointXY(44,22), QgsPointXY(43,21)] # The last point is the same as the first to close the polygon
-
-        # Create a polygon from the list of points
+        points = [QgsPointXY(43,21), QgsPointXY(43,22), QgsPointXY(44,22), QgsPointXY(43,21)]
         polygon = [points]
 
-        # Set the geometry of the feature
         f.setGeometry(QgsGeometry.fromPolygonXY(polygon))
-
         pr.addFeature(f)
         vl.updateExtents()
         QgsProject.instance().addMapLayer(vl)
