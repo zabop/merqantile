@@ -35,7 +35,8 @@ from qgis.core import (QgsProcessing,
                        QgsFeatureSink,
                        QgsProcessingAlgorithm,
                        QgsProcessingParameterFeatureSource,
-                       QgsProcessingParameterFeatureSink)
+                       QgsProcessingParameterFeatureSink,
+                       QgsProcessingParameterNumber)
 
 
 class MerqantileAlgorithm(QgsProcessingAlgorithm):
@@ -65,23 +66,21 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         with some other properties.
         """
 
-        # We add the input vector features source. It can have any kind of
-        # geometry.
         self.addParameter(
-            QgsProcessingParameterFeatureSource(
-                self.INPUT,
-                self.tr('Input layer'),
-                [QgsProcessing.TypeVectorAnyGeometry]
+            QgsProcessingParameterNumber(
+                "Z", self.tr("Z"), QgsProcessingParameterNumber.Integer, 13
             )
         )
 
-        # We add a feature sink in which to store our processed features (this
-        # usually takes the form of a newly created vector layer when the
-        # algorithm is run in QGIS).
         self.addParameter(
-            QgsProcessingParameterFeatureSink(
-                self.OUTPUT,
-                self.tr('Output layer')
+            QgsProcessingParameterNumber(
+                "X", self.tr("X"), QgsProcessingParameterNumber.Integer, 4224
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                "Y", self.tr("Y"), QgsProcessingParameterNumber.Integer, 2424
             )
         )
 
