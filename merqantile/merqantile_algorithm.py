@@ -111,7 +111,13 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         tc = tile_centre(parameters["Z"], parameters["X"], parameters["Y"])
         sl = sidelength(parameters["Z"])
 
-        points = [QgsPointXY(tc[0],tc[1]), QgsPointXY(tc[0]+sl,tc[1]), QgsPointXY(tc[0]+sl,tc[1]+sl), QgsPointXY(tc[0],tc[1])]
+        points = [
+            QgsPointXY(tc[0]-sl/2,tc[1]-sl/2),
+            QgsPointXY(tc[0]-sl/2,tc[1]+sl/2),
+            QgsPointXY(tc[0]+sl/2,tc[1]+sl/2),
+            QgsPointXY(tc[0]+sl/2,tc[1]-sl/2),
+            QgsPointXY(tc[0]-sl/2,tc[1]-sl/2)
+            ]
         polygon = [points]
 
         f.setGeometry(QgsGeometry.fromPolygonXY(polygon))
