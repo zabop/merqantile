@@ -36,4 +36,4 @@ def classFactory(iface):  # pylint: disable=invalid-name
     """
     #
     from .merqantile import MerqantilePlugin
-    return MerqantilePlugin()
+    return MerqantilePlugin(iface)
