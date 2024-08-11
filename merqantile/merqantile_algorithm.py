@@ -36,7 +36,12 @@ from qgis.core import (QgsProcessing,
                        QgsProcessingAlgorithm,
                        QgsProcessingParameterFeatureSource,
                        QgsProcessingParameterFeatureSink,
-                       QgsProcessingParameterNumber)
+                       QgsProcessingParameterNumber,
+                       QgsVectorLayer,
+                       QgsFeature,
+                       QgsGeometry,
+                       QgsPointXY,
+                       QgsProject)
 
 
 class MerqantileAlgorithm(QgsProcessingAlgorithm):
@@ -88,6 +93,14 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         """
         Here is where the processing itself takes place.
         """
+
+        vl = QgsVectorLayer("Polygon", "temp", "memory")
+        pr = vl.dataProvider()
+        f = QgsFeature()
+        f.setGeometry(QgsGeometry.fromPointXY(QgsPointXY(43,21)).buffer(5,24))
+        pr.addFeature(f)
+        vl.updateExtents() 
+        QgsProject.instance().addMapLayer(vl)
 
         # Retrieve the feature source and sink. The 'dest_id' variable is used
         # to uniquely identify the feature sink, and must be included in the
