@@ -5,4 +5,4 @@ There are tools to generate those tile bounds (ie MapBox's [mercantile](https://
 
 ![](https://i.imgur.com/tNA0dhD.png)
 
-[This](https://zabop.github.io/tilecalc/3857.html) can be used to check whether the resulting polygon is at the correct location: [it is](https://lp-tools.toolforge.org/misc/bbox.html?sw=58.97266715450148,5.668945312499955&ne=58.99531118795089,5.624999999999965). If you don't want to add a polygon, just visualise tile names, see [this](https://github.com/zabop/tilevis).
+[This](https://zabop.github.io/tilecalc/3857.html) can be used to check whether the resulting polygon is at the correct location: [it is](https://lp-tools.toolforge.org/misc/bbox.html?sw=58.97266715450148,5.668945312499955&ne=58.99531118795089,5.624999999999965). If you don't want to add a polygon, just visualise tile names using an XYZ layer, see [this](https://github.com/zabop/tilevis).
