@@ -139,7 +139,7 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Tilebounds to Layer'
+        return 'Tile Bounds to Layer'
 
     def displayName(self):
         """

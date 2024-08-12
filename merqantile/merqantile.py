@@ -64,7 +64,7 @@ class MerqantilePlugin(object):
         icon = os.path.join(os.path.join(cmd_folder, 'logo.png'))
         self.action = QAction(
             QIcon(icon),
-            u"Tilebounds to Layer", self.iface.mainWindow())
+            u"Tile Bounds to Layer", self.iface.mainWindow())
         self.action.triggered.connect(self.run)
         self.iface.addPluginToMenu(u"&merqantile", self.action)
         self.iface.addToolBarIcon(self.action)
@@ -75,4 +75,4 @@ class MerqantilePlugin(object):
         self.iface.removeToolBarIcon(self.action)
 
     def run(self):
-        processing.execAlgorithmDialog("merqantile:Tilebounds to Layer")
+        processing.execAlgorithmDialog("merqantile:Tile Bounds to Layer")
