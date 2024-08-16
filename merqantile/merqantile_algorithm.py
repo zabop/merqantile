@@ -175,3 +175,137 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
 
     def createInstance(self):
         return MerqantileAlgorithm()
+
+
+class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
+    """
+    This is an example algorithm that takes a vector layer and
+    creates a new identical one.
+
+    It is meant to be used as an example of how to create your own
+    algorithms and explain methods and variables used to do it. An
+    algorithm like this will be available in all elements, and there
+    is not need for additional work.
+
+    All Processing algorithms should extend the QgsProcessingAlgorithm
+    class.
+    """
+
+    # Constants used to refer to parameters and outputs. They will be
+    # used when calling the algorithm from another algorithm, or when
+    # calling from the QGIS console.
+
+    OUTPUT = 'OUTPUT'
+    INPUT = 'INPUT'
+
+    def initAlgorithm(self, config):
+        """
+        Here we define the inputs and output of the algorithm, along
+        with some other properties.
+        """
+
+        self.addParameter(
+            QgsProcessingParameterMultipleLayers(
+                "inputLayers",
+                self.tr("Input geometry"),
+                QgsProcessing.TypeVectorAnyGeometry,
+            )
+        )
+
+        self.addParameter(
+            QgsProcessingParameterNumber(
+                "Z", self.tr("Z"), QgsProcessingParameterNumber.Integer, 13
+            )
+        )
+
+    def processAlgorithm(self, parameters, context, feedback):
+        """
+        Here is where the processing itself takes place.
+        """
+
+        vl = QgsVectorLayer("Polygon?crs=EPSG:3857", "temp", "memory")
+        pr = vl.dataProvider()
+        f = QgsFeature()
+
+        maxc = 20037508.342789244
+
+        def sidelength(z):
+            return 2 * maxc / (2 ** z)
+        
+        def tile_centre(z, x, y):
+            x = -maxc + maxc / (2 ** z) + sidelength(z) * x
+            y = maxc - maxc / (2 ** z) - sidelength(z) * y
+            return x, y
+        
+        def webmercator_xy_zoom_to_tileid(
+            x: float, y: float, z: int, maxc: float = maxc
+        ) -> list[int]:
+            return [
+                z,
+                int(math.floor((x + maxc) * (2 ** (z - 1)) / maxc)),
+                int(math.floor((-y + maxc) * (2 ** (z - 1)) / maxc)),
+            ]
+        
+        tc = tile_centre(parameters["Z"], parameters["X"], parameters["Y"])
+        sl = sidelength(parameters["Z"])
+
+        points = [
+            QgsPointXY(tc[0]-sl/2,tc[1]-sl/2),
+            QgsPointXY(tc[0]-sl/2,tc[1]+sl/2),
+            QgsPointXY(tc[0]+sl/2,tc[1]+sl/2),
+            QgsPointXY(tc[0]+sl/2,tc[1]-sl/2),
+            QgsPointXY(tc[0]-sl/2,tc[1]-sl/2)
+            ]
+        polygon = [points]
+
+        f.setGeometry(QgsGeometry.fromPolygonXY(polygon))
+        pr.addFeature(f)
+        vl.updateExtents()
+        QgsProject.instance().addMapLayer(vl)
+
+        return {self.OUTPUT: "Successfully created layerrr"}
+
+    def name(self):
+        """
+        Returns the algorithm name, used for identifying the algorithm. This
+        string should be fixed for the algorithm, and must not be localised.
+        The name should be unique within each provider. Names should contain
+        lowercase alphanumeric characters only and no spaces or other
+        formatting characters.
+        """
+        return 'Area to Ts'
+
+    def displayName(self):
+        """
+        Returns the translated algorithm name, which should be used for any
+        user-visible display of the algorithm name.
+        """
+        return self.tr(self.name())
+
+    def group(self):
+        """
+        Returns the name of the group this algorithm belongs to. This string
+        should be localised.
+        """
+        return self.tr(self.groupId())
+
+    def groupId(self):
+        """
+        Returns the unique ID of the group this algorithm belongs to. This
+        string should be fixed for the algorithm, and must not be localised.
+        The group id should be unique within each provider. Group id should
+        contain lowercase alphanumeric characters only and no spaces or other
+        formatting characters.
+        """
+        return ''
+
+    def tr(self, string):
+        return QCoreApplication.translate('Processing', string)
+    
+    def icon(self):
+        cmd_folder = os.path.split(inspect.getfile(inspect.currentframe()))[0]
+        icon = QIcon(os.path.join(os.path.join(cmd_folder, 'logo.png')))
+        return icon
+
+    def createInstance(self):
+        return AreaToTilesAlgorithm()

@@ -32,6 +32,7 @@ __revision__ = '$Format:%H$'
 
 from qgis.core import QgsProcessingProvider
 from .merqantile_algorithm import MerqantileAlgorithm
+from .merqantile_algorithm import AreaToTilesAlgorithm
 
 import os
 import inspect
@@ -57,6 +58,7 @@ class MerqantileProvider(QgsProcessingProvider):
         Loads all algorithms belonging to this provider.
         """
         self.addAlgorithm(MerqantileAlgorithm())
+        self.addAlgorithm(AreaToTilesAlgorithm())
         # add additional algorithms here
         # self.addAlgorithm(MyOtherAlgorithm())
 
