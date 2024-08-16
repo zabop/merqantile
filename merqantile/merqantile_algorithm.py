@@ -36,6 +36,7 @@ from qgis.core import (QgsProcessing,
                        QgsProcessingAlgorithm,
                        QgsProcessingParameterFeatureSource,
                        QgsProcessingParameterFeatureSink,
+                       QgsProcessingParameterMultipleLayers,
                        QgsProcessingParameterNumber,
                        QgsVectorLayer,
                        QgsFeature,
@@ -273,7 +274,7 @@ class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
         lowercase alphanumeric characters only and no spaces or other
         formatting characters.
         """
-        return 'Area to Ts'
+        return 'Area to Tiles'
 
     def displayName(self):
         """
