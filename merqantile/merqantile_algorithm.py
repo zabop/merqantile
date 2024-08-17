@@ -238,6 +238,7 @@ class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
             y = maxc - maxc / (2 ** z) - sidelength(z) * y
             return x, y
         
+        import math
         def webmercator_xy_zoom_to_tileid(
             x: float, y: float, z: int, maxc: float = maxc
         ) -> list[int]:
@@ -246,7 +247,7 @@ class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
                 int(math.floor((x + maxc) * (2 ** (z - 1)) / maxc)),
                 int(math.floor((-y + maxc) * (2 ** (z - 1)) / maxc)),
             ]
-        
+                
         tc = tile_centre(parameters["Z"], parameters["X"], parameters["Y"])
         sl = sidelength(parameters["Z"])
 
