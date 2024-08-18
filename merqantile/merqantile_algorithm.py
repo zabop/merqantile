@@ -245,9 +245,10 @@ class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
                 int(math.floor((-y + maxc) * (2 ** (z - 1)) / maxc)),
             ]
         
+        [name] = [layer.name() for layer in QgsProject.instance().mapLayers().values() if parameters['inputLayer']==layer.id()]
+        [layer] = QgsProject.instance().mapLayersByName(name)
 
-                
-        return {self.OUTPUT: "Successfully created layerrr"}
+        return {self.OUTPUT: f"Successfully created layer, xmin:, {parameters['inputLayer']}, extent: {layer.extent()}"}
 
     def name(self):
         """
