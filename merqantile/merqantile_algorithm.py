@@ -206,10 +206,11 @@ class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
         """
 
         self.addParameter(
-            QgsProcessingParameterMultipleLayers(
-                "inputLayers",
-                self.tr("Input geometry"),
-                QgsProcessing.TypeVectorAnyGeometry,
+            QgsProcessingParameterFeatureSource(
+                "inputLayer",
+                description='Input layer',
+                types=[QgsProcessing.TypeVectorAnyGeometry],
+                defaultValue=None
             )
         )
 
@@ -223,10 +224,6 @@ class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
         """
         Here is where the processing itself takes place.
         """
-
-        vl = QgsVectorLayer("Polygon?crs=EPSG:3857", "temp", "memory")
-        pr = vl.dataProvider()
-        f = QgsFeature()
 
         maxc = 20037508.342789244
 
@@ -247,24 +244,9 @@ class AreaToTilesAlgorithm(QgsProcessingAlgorithm):
                 int(math.floor((x + maxc) * (2 ** (z - 1)) / maxc)),
                 int(math.floor((-y + maxc) * (2 ** (z - 1)) / maxc)),
             ]
+        
+
                 
-        tc = tile_centre(parameters["Z"], parameters["X"], parameters["Y"])
-        sl = sidelength(parameters["Z"])
-
-        points = [
-            QgsPointXY(tc[0]-sl/2,tc[1]-sl/2),
-            QgsPointXY(tc[0]-sl/2,tc[1]+sl/2),
-            QgsPointXY(tc[0]+sl/2,tc[1]+sl/2),
-            QgsPointXY(tc[0]+sl/2,tc[1]-sl/2),
-            QgsPointXY(tc[0]-sl/2,tc[1]-sl/2)
-            ]
-        polygon = [points]
-
-        f.setGeometry(QgsGeometry.fromPolygonXY(polygon))
-        pr.addFeature(f)
-        vl.updateExtents()
-        QgsProject.instance().addMapLayer(vl)
-
         return {self.OUTPUT: "Successfully created layerrr"}
 
     def name(self):
