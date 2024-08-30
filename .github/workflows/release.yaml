@@ -13,22 +13,13 @@ jobs:
           with:
             python-version: 3.8
   
-         # Needed if the plugin is using Transifex, to have the lrelease command
-         # - name: Install Qt lrelease
-         #   run: |
-         #    sudo apt-get update
-         #    sudo apt-get install qt5-make qttools5-dev-tools
-  
         - name: Install qgis-plugin-ci
           run: pip3 install qgis-plugin-ci
-  
-        - name: Print GITHUB_REF
-          run: echo "GITHUB_REF is ${GITHUB_REF/refs\/tags\//}"
 
         - name: Deploy plugin
           run: >-
             qgis-plugin-ci
-            release ${GITHUB_REF/refs\/tags\//}
+            release --release-tag ${GITHUB_REF/refs\/tags\//}
             --github-token "$GITHUB_TOKEN"
             --osgeo-username "$OSGEO_USER"
             --osgeo-password "$OSGEO_PASSWORD"
