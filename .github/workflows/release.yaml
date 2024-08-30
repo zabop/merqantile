@@ -29,6 +29,10 @@ jobs:
           run: >-
             qgis-plugin-ci
             release ${GITHUB_REF/refs\/tags\//}
-            --github-token ${{ secrets.GITHUB_TOKEN }}
-            --osgeo-username ${{ secrets.OSGEO_USER }}
-            --osgeo-password ${{ secrets.OSGEO_PASSWORD }}
+            --github-token "$GITHUB_TOKEN"
+            --osgeo-username "$OSGEO_USER"
+            --osgeo-password "$secrets.OSGEO_PASSWORD"
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            OSGEO_USER: ${{ secrets.OSGEO_USER }}
+            OSGEO_PASSWORD: ${{ secrets.OSGEO_PASSWORD }}
