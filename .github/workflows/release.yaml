@@ -18,11 +18,10 @@ jobs:
 
         - name: Deploy plugin
           run: >-
-            qgis-plugin-ci
-            release --release-tag ${GITHUB_REF/refs\/tags\//}
-            --github-token "$GITHUB_TOKEN"
-            --osgeo-username "$OSGEO_USER"
-            --osgeo-password "$OSGEO_PASSWORD"
+            qgis-plugin-ci \
+            release --release-tag ${GITHUB_REF/refs\/tags\//} \
+            --osgeo-username "$OSGEO_USER" \
+            --osgeo-password "$OSGEO_PASSWORD" \
             ${GITHUB_REF/refs\/tags\//}
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
