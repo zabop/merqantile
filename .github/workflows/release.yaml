@@ -23,6 +23,7 @@ jobs:
             --github-token "$GITHUB_TOKEN"
             --osgeo-username "$OSGEO_USER"
             --osgeo-password "$OSGEO_PASSWORD"
+            ${GITHUB_REF/refs\/tags\//}
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
             OSGEO_USER: ${{ secrets.OSGEO_USER }}
