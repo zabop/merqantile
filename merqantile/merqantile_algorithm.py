@@ -101,7 +101,7 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         Here is where the processing itself takes place.
         """
 
-        vl = QgsVectorLayer("Polygon?crs=EPSG:3857", "temp", "memory")
+        vl = QgsVectorLayer("Polygon?crs=EPSG:3857", f"{parameters['Z']}/{parameters['X']}/{parameters['Y']}","memory")
         pr = vl.dataProvider()
         f = QgsFeature()
 
