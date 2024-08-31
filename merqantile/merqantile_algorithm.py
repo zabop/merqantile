@@ -31,12 +31,14 @@ __copyright__ = '(C) 2024 by zabop'
 __revision__ = '$Format:%H$'
 
 from qgis.PyQt.QtCore import QCoreApplication
+from qgis.PyQt.QtGui import QColor
 from qgis.core import (QgsProcessing,
                        QgsFeatureSink,
                        QgsProcessingAlgorithm,
                        QgsProcessingParameterFeatureSource,
                        QgsProcessingParameterFeatureSink,
                        QgsProcessingParameterMultipleLayers,
+                       QgsSimpleLineSymbolLayer,
                        QgsProcessingParameterNumber,
                        QgsVectorLayer,
                        QgsFeature,
@@ -128,7 +130,11 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         f.setGeometry(QgsGeometry.fromPolygonXY(polygon))
         pr.addFeature(f)
         vl.updateExtents()
-        QgsProject.instance().addMapLayer(vl)
+        l = QgsProject.instance().addMapLayer(vl)
+
+        l.renderer().symbol().changeSymbolLayer(
+            0, QgsSimpleLineSymbolLayer(QColor("#000000"), width=1)
+        )
 
         return {self.OUTPUT: "Successfully created layer"}
 
