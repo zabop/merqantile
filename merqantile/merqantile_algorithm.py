@@ -32,6 +32,7 @@ __revision__ = '$Format:%H$'
 
 from qgis.PyQt.QtCore import QCoreApplication
 from qgis.PyQt.QtGui import QColor
+from PyQt5.QtCore import QVariant
 from qgis.core import (QgsProcessing,
                        QgsFeatureSink,
                        QgsProcessingAlgorithm,
@@ -44,7 +45,11 @@ from qgis.core import (QgsProcessing,
                        QgsFeature,
                        QgsGeometry,
                        QgsPointXY,
-                       QgsProject)
+                       QgsProject,
+                       QgsField,
+                       QgsPalLayerSettings,
+                       QgsVectorLayerSimpleLabeling,
+                       )
 
 
 import os
@@ -100,11 +105,6 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         """
         Here is where the processing itself takes place.
         """
-
-        vl = QgsVectorLayer("Polygon?crs=EPSG:3857", f"{parameters['Z']}/{parameters['X']}/{parameters['Y']}","memory")
-        pr = vl.dataProvider()
-        f = QgsFeature()
-
         maxc = 20037508.342789244
 
         def sidelength(z):
@@ -114,6 +114,14 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
             x = -maxc + maxc / (2 ** z) + sidelength(z) * x
             y = maxc - maxc / (2 ** z) - sidelength(z) * y
             return x, y
+
+        tileId = f"{parameters['Z']}/{parameters['X']}/{parameters['Y']}"
+
+        vl = QgsVectorLayer("Polygon?crs=EPSG:3857", tileId,"memory")
+        pr = vl.dataProvider()
+        id_field = QgsField("ID", QVariant.String)
+        pr.addAttributes([id_field])
+        vl.updateFields()
         
         tc = tile_centre(parameters["Z"], parameters["X"], parameters["Y"])
         sl = sidelength(parameters["Z"])
@@ -127,7 +135,9 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
             ]
         polygon = [points]
 
+        f = QgsFeature()
         f.setGeometry(QgsGeometry.fromPolygonXY(polygon))
+        f.setAttributes([tileId])
         pr.addFeature(f)
         vl.updateExtents()
         l = QgsProject.instance().addMapLayer(vl)
@@ -135,6 +145,18 @@ class MerqantileAlgorithm(QgsProcessingAlgorithm):
         l.renderer().symbol().changeSymbolLayer(
             0, QgsSimpleLineSymbolLayer(QColor("#000000"), width=1)
         )
+
+        # Set up labeling
+        label = QgsPalLayerSettings()
+        label.fieldName = "ID"
+        label.placement = QgsPalLayerSettings.AroundPoint
+        label.enabled = True
+
+        # Apply labeling to the layer
+        layer_settings = QgsVectorLayerSimpleLabeling(label)
+        l.setLabelsEnabled(True)
+        l.setLabeling(layer_settings)
+        l.triggerRepaint()
 
         return {self.OUTPUT: "Successfully created layer"}
 
